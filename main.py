@@ -1,7 +1,29 @@
 import tkinter as tk
+import cv2
+import tkinter.messagebox as msgbx
 
 from tkinter import filedialog
 from PIL import Image, ImageTk
+
+#사진 합성
+def merge_image(picture_dir, mask_dir, cover_dir, result_dir, counter):
+	picture_image = cv2.imread(picture_dir)
+	picture_image = cv2.resize(picture_image, (300, 300))
+	cv2.imwrite(result_dir + '/picture/pic_test' + str(counter) + '.png', picture_image)
+	picture_image = cv2.imread(result_dir + '/picture/pic_test' + str(counter) + '.png')
+
+	mask_image = cv2.imread(mask_dir)
+	mask_image = cv2.resize(mask_image, (300, 300))
+	cv2.imwrite(result_dir + '/mask/mask_test' + str(counter) + '.png', mask_image)
+	mask_image = cv2.imread(result_dir + '/mask/mask_test' + str(counter) + '.png')
+
+	masked_image = cv2.bitwise_and(picture_image, mask_image)
+
+	cover_image = cv2.imread(cover_dir)
+	
+
+	cv2.imwrite(result_dir + '/test' + str(counter) + '.png', masked_image)
+	
 
 
 #사진 편집
@@ -56,6 +78,11 @@ def run_program(event):
 	#mask: 마스크
 	#cover: 표지
 	#output_dir: 저장할 장소
+
+	for i in range(len(pics)):
+		merge_image(pics[i], mask, cover, output_dir, i + 1)
+	
+	msgbx.showinfo('완료', 'ㅇㅇ')
 	pass
 
 
@@ -138,12 +165,8 @@ run.grid(row = 5, column = 5, rowspan = 2)
 
 tk.Label(text = ' ').grid(row = 6, column = 0)
 tk.Label(text = ' ').grid(row = 7, column = 0)
-tk.Label(text = ' ').grid(row = 8, column = 0)
-tk.Label(text = ' ').grid(row = 9, column = 0)
-tk.Label(text = ' ').grid(row = 10, column = 0)
-tk.Label(text = ' ').grid(row = 11, column = 0)
-tk.Label(text = ' ').grid(row = 12, column = 0)
-tk.Label(text = ' ').grid(row = 13, column = 0)
-tk.Label(text = ' ').grid(row = 14, column = 0)
+
+
+msgbx.showinfo('주의사항', '폴더 및 파일명은 영어로 설정해주세요')
 
 ui.mainloop()
